@@ -1,6 +1,335 @@
-# ML concepts specific to retrosynthesis
-## Attention mechanisms
-## GNN architectures
+* Search Algorithms
+** RetroStar
+ #+begin_src python
+   class MolNode:
+       smiles
+       cost
+       reaction_cost
+       solved
+       parent
+       children
+
+   class RNode:
+       reactants
+       cost
+       parent
+       children
+
+   class RetroStar:
+       def __init__(self, one_step_model, value_fn, available_mols, max_depth):
+           self...
+           self.mol_nodes = {}
+
+       def find_synthesis(self, target_mol):
+           root = MolNode(target_mol)
+           self.mol_nodes[target_mol] = root
+
+           queue = MaxHeap()
+           q.put((root.cost, roo))
+
+           while not q.empty():
+               cost, mol_node = queue.get()
+               if mol_node.solved:
+                   continue
+
+
+               if mol_node.smiles in self.available:
+                   mol_node.solved = True
+                   if mol_node == root:
+                       return self.extrat_solution
+                   continue
+
+               reactions = ss_model
+               mol_node.children = []
+
+               for reactants, cost in reactions:
+                   reaction = ReactionNode(reactants, cost, mol_node)
+                   mol_node.children.append(reaction)
+
+                   reaction_children = []
+                   for reactant in reactants:
+                       if reactant not in self.mol_nodes:
+                           
+
+
+ #+end_src
+** MCTS
+** Beam search
+- modification of bfs where we consider beam_size most likely molecules at each depth
+- need heap for ease of access of 'k best'
+ #+begin_src python
+   from copy import deepcopy
+
+   class MaxHeap:
+       def __init__(self):
+           self.heap = []
+
+       def parent(self, i):
+           return (i-1)//2
+
+       def left_child(self, i):
+           return 2*i+1
+
+       def right_child(self, i):
+           return 2*i+2
+
+       def push(self, item):
+           self.heap.append(item)
+           self._sift_up(len(self.heap)-1)
+
+       def pop(self):
+           max_ = self.heap[0]
+           self.heap[0] = self.heap.pop()
+           self._sift_down()
+           return max_
+
+       def nlargest(self, n):
+           out = []
+           for _ in range(n):
+               out.append(self.pop())
+           return out
+
+       def _swap_(self, i, j):
+           self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
+
+       def _sift_up(self, i):
+           parent = self.parent(i)
+           if i > 0 and self.heap[i] > self.heap[parent]:
+               self.swap(i, parent)
+               self._sift_up(parent)
+
+       def _sift_down(self, i):
+           max_idx = i
+           left = self.left_child(i)
+           right = self.right_child(i)
+
+           if left < len(self.heap) and self.heap[left] > self.heap[max_idx]:
+               max_idx = left
+
+           if right < len(self.heap) and self.heap[right] > self.heap[max_idx]:
+               max_idx = right
+
+           if max_idx != i:
+               self.swap(i, max_idx)
+               self._sift_down(max_idx)
+
+   class State:
+       molecules: Set[str]
+       score: float
+       steps: list[tuple] # list of reactions as (reactant, product)
+
+   class BeamSearch:
+       def __init__(self, model, building_blocks, beam_size):
+           self.model = model
+           self.building_blocks = building_blocks
+           self.beam_size = beam_size
+
+
+       def get_reactants(self, target):
+           # return empty list if no reactants
+           return [({'c'}, 0.1), ({'cc'}, 0.9)]
+
+       def is_solved(self, state):
+           return all(mol in self.building_blocks for mol in state.molecules)
+
+       def search(target, max_steps):
+           beam = [State(molecules={target}, score=1.0, [])]
+
+           for _ in range(max_steps):
+               candidates = MaxHeap()
+               for state in beam:
+                   if self.is_solved(state):
+                       return state
+                   for mol in state.molecules:
+                       if mol in self.building_blocks:
+                           continue
+                       for reactants, score in self.get_reactants(mol):
+                           new_mols = deepcopy(state.molecules)
+                           mew_mols.remove(mol)
+                           new_mols.update(reactants)
+                           new_state = State(molecules=mols, score=state.score*score, steps=state.steps + [(reactants, mol)])
+                           candidates.push(new_state)
+
+               if len(candidates)==0:
+                   break
+
+               beam = candidates.nlargest(n= beam_size)
+
+            return beam[0] if beam else None
+#+end_src
+
+** Caching module for synthesis search
+
+* ML concepts specific to retrosynthesis
+** Message passing
+- Sources: [Distilled](https://distill.pub/2021/gnn-intro/), 
+ #+begin_src python
+   class MessagePassing(nn.Module):
+       def __init__(self, input_dim, hidden_dim, out_dim):
+           super().__init__()
+           self.message_fn = nn.Sequential([nn.Linear(input_dim, hidden_dim), nn.ReLu(), nn.Linear(hidden_dim, out_dim)])
+           self.update_fn = nn.Sequential([nn.Linear(hidden_dim, hidden_dim), nn.ReLu(), nn.Linear(hidden_dim, out_dim)])
+
+       def forward(self, edge_index, node_features, edge_features):
+           source, target = edge_index
+           source_features = node_features[source]
+           target_features = node_features[target]
+           messages = self.message_fn(torch.cat([source_features, target_features, edge_features], dim=1))
+           aggregated_messages = torch.zeros_like(node_features)
+           aggregated_messages.add_index_(0, target, messages)
+           updated_message = self.update_fn(aggregated_messages)
+
+           return updated_message
+ #+end_src
+ 
+** MCTS
+** Beam search
+- modification of bfs where we consider beam_size most likely molecules at each depth
+- need heap for ease of access of 'k best'
+ #+begin_src python
+   from copy import deepcopy
+
+   class MaxHeap:
+       def __init__(self):
+           self.heap = []
+
+       def parent(self, i):
+           return (i-1)//2
+
+       def left_child(self, i):
+           return 2*i+1
+
+       def right_child(self, i):
+           return 2*i+2
+
+       def push(self, item):
+           self.heap.append(item)
+           self._sift_up(len(self.heap)-1)
+
+       def pop(self):
+           max_ = self.heap[0]
+           self.heap[0] = self.heap.pop()
+           self._sift_down()
+           return max_
+
+       def nlargest(self, n):
+           out = []
+           for _ in range(n):
+               out.append(self.pop())
+           return out
+
+       def _swap_(self, i, j):
+           self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
+
+       def _sift_up(self, i):
+           parent = self.parent(i)
+           if i > 0 and self.heap[i] > self.heap[parent]:
+               self.swap(i, parent)
+               self._sift_up(parent)
+
+       def _sift_down(self, i):
+           max_idx = i
+           left = self.left_child(i)
+           right = self.right_child(i)
+
+           if left < len(self.heap) and self.heap[left] > self.heap[max_idx]:
+               max_idx = left
+
+           if right < len(self.heap) and self.heap[right] > self.heap[max_idx]:
+               max_idx = right
+
+           if max_idx != i:
+               self.swap(i, max_idx)
+               self._sift_down(max_idx)
+
+   class State:
+       molecules: Set[str]
+       score: float
+       steps: list[tuple] # list of reactions as (reactant, product)
+
+   class BeamSearch:
+       def __init__(self, model, building_blocks, beam_size):
+           self.model = model
+           self.building_blocks = building_blocks
+           self.beam_size = beam_size
+
+
+       def get_reactants(self, target):
+           # return empty list if no reactants
+           return [({'c'}, 0.1), ({'cc'}, 0.9)]
+
+       def is_solved(self, state):
+           return all(mol in self.building_blocks for mol in state.molecules)
+
+       def search(target, max_steps):
+           beam = [State(molecules={target}, score=1.0, [])]
+
+           for _ in range(max_steps):
+               candidates = MaxHeap()
+               for state in beam:
+                   if self.is_solved(state):
+                       return state
+                   for mol in state.molecules:
+                       if mol in self.building_blocks:
+                           continue
+                       for reactants, score in self.get_reactants(mol):
+                           new_mols = deepcopy(state.molecules)
+                           mew_mols.remove(mol)
+                           new_mols.update(reactants)
+                           new_state = State(molecules=mols, score=state.score*score, steps=state.steps + [(reactants, mol)])
+                           candidates.push(new_state)
+
+               if len(candidates)==0:
+                   break
+
+               beam = candidates.nlargest(n= beam_size)
+
+            return beam[0] if beam else None
+#+end_src
+
+** Caching module for synthesis search
+
+* ML concepts specific to retrosynthesis
+** Message passing
+
+** Attention mechanisms
+- determine which nodes are more important
+- compute attention scores
+  - using QKV
+  - other approaches to computing attention scores
+- attention scores determine the contribution of a node to the updated representation of the target node
+- mathematical properties/results involving attention?
+- how it's incorporated in message passing
+
+- Interview questions:
+  - Explain how self-attention mechanisms can be beneficial when applying GNNs to molecular graphs, particularly for retrosynthesis prediction
+
+ #+begin_src python
+   def self_attention(x: torch.Tensor, a: torch.Tensor, w_q, w_k, w_v) -> x:
+       '''
+          Only compute attention between nodes that are connected in the graph
+          Use scaled dot-product attention
+          Return the new node representations
+
+          a: adjacency matrix, n x n, 1 if edge, else no.
+          x: node features matrix, n x d
+          w_q: weights matrix for queries, d x dk
+          w_k, w_v: same but for keys and values instead
+       '''
+       k = x @ w_k # (n, d) @ (d, dk) -> (n, dk)
+       q = x @ w_q
+       v = x @ w_v
+
+       mask = torch.where(a > 0.0, 1, 1e-9)
+       masked_attn = (q @ k.T)+mask
+       attn_scores = softmax(mask_attn / sqrt(dk)) # -> (n,n)
+       # mask the attention scores using the adjacency matrix a 
+       new_x = attn_scores @ v # -> (n, dk)
+
+       return new_x
+#+end_src
+  
+** GNN architectures
 - Basics of message-passing:
   - equivariance
 - Graph attention:
@@ -22,19 +351,19 @@
         - Scenarios when most valuable: think about the structures of the molecule and where component interactions is least expected.
         - vs alternatives 
 
-# Math concepts relevant to retrosynthesis
-## Equivariance
-## Graph Laplacian
-## Discrete distributions
+*  Math concepts relevant to retrosynthesis
+** Equivariance
+** Graph Laplacian
+** Discrete distributions
 
-# Molecular representation
-## Moecular fingerprints
-## SMILES
-## Graph representation
+* Molecular representation
+** Moecular fingerprints
+** SMILES
+** Graph representation
 - augmented with structural and chemical properties
-## Chemical descriptors encoding
+** Chemical descriptors encoding
 
-# Most relevant previous work
+* Most relevant previous work
 - RetroBridge
 - DiGress
 - MolTransformer
