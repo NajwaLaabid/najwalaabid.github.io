@@ -30,18 +30,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-breaking-symmetry-aligned-equivariance-for-graph-diffusion-models",
-      
-        title: "Breaking Symmetry: Aligned Equivariance for Graph Diffusion Models",
-      
-      description: "Presenting our model DiffAlign (ICLR 2025)",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2025/diffalign/";
-        
-      },
-    },{id: "books-the-godfather",
+        },{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
           section: "Books",handler: () => {
@@ -51,14 +40,7 @@ ninja.data = [{
         title: 'email',
         section: 'Socials',
         handler: () => {
-          window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
-        },
-      },{
-        id: 'social-inspire',
-        title: 'Inspire HEP',
-        section: 'Socials',
-        handler: () => {
-          window.open("https://inspirehep.net/authors/1010907", "_blank");
+          window.open("mailto:%6E%61%6A%77%61.%6C%61%61%62%69%64@%61%61%6C%74%6F.%66%69", "_blank");
         },
       },{
         id: 'social-rss',
@@ -73,13 +55,6 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
-        },
-      },{
-        id: 'social-custom_social',
-        title: 'Custom_social',
-        section: 'Socials',
-        handler: () => {
-          window.open("https://www.alberteinstein.com/", "_blank");
         },
       },{
       id: 'light-theme',
