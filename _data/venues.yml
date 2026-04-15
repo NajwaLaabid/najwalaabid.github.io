@@ -1,9 +1,11 @@
-"AJP":
-  url: https://aapt.scitation.org/journal/ajp
+"ICLR":
+  url: https://iclr.cc/
   color: "#00369f"
 
-"PhysRev":
-  url: https://journals.aps.org/
-
-"Vision":
+"GRaM":
+  url: https://gram-workshop.github.io/
   color: "#009f36"
+
+"SPIGM":
+  url: https://spigm.github.io/
+  color: "#9f3600"
