@@ -1,26 +1,174 @@
 {
   "basics": {
     "name": "Najwa Laabid",
-    "label": "PhD Student",
+    "label": "ML Engineer & PhD Researcher",
     "image": "",
     "email": "najwa.laabid@aalto.fi",
     "url": "https://najwalaabid.github.io",
-    "summary": "PhD student at Aalto University working on machine learning applied to drug discovery.",
+    "summary": "ML engineer and PhD researcher with 6+ years building end-to-end solutions across drug discovery, genomics, network security, and enterprise software. Experienced across the full stack from prototyping to deployment, with a consistent record of shipping pragmatic systems in both industry (Google, Ericsson) and research settings.",
     "location": {
       "city": "Espoo",
       "countryCode": "FI",
       "region": "Uusimaa"
-    }
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "NajwaLaabid",
+        "url": "https://github.com/NajwaLaabid"
+      }
+    ]
   },
+  "work": [
+    {
+      "name": "Aalto University",
+      "position": "Doctoral Researcher",
+      "url": "https://www.aalto.fi/",
+      "startDate": "2022-05-01",
+      "endDate": "",
+      "summary": "PhD research in machine learning applied to drug discovery, focusing on graph diffusion models for retrosynthesis.",
+      "highlights": [
+        "Published at ICLR 2025 and ICML 2024 workshops"
+      ]
+    },
+    {
+      "name": "University of Eastern Finland",
+      "position": "Junior Researcher",
+      "url": "https://www.uef.fi/",
+      "startDate": "2021-09-01",
+      "endDate": "2022-04-01",
+      "summary": "Built a VAE model for a NeurIPS 2022 competition tackling multimodal single-cell integration, a core open problem in computational biology with direct implications for cancer disease profiling.",
+      "highlights": [
+        "PyTorch",
+        "AWS (EC2/S3)"
+      ]
+    },
+    {
+      "name": "Aalto University",
+      "position": "ASCI Programme - Intern",
+      "url": "https://www.aalto.fi/",
+      "startDate": "2021-06-01",
+      "endDate": "2021-08-01",
+      "summary": "Implemented approximate inference for nonstationary Gaussian processes via Kalman smoothing in JAX, enabling GP models to adapt to signals with time-varying dynamics such as gravitational wave chirps.",
+      "highlights": [
+        "PyTorch",
+        "JAX",
+        "AWS (EC2/S3)"
+      ]
+    },
+    {
+      "name": "Ericsson Inc.",
+      "position": "Thesis Placement - Data Analytics",
+      "url": "https://www.ericsson.com/",
+      "startDate": "2020-06-01",
+      "endDate": "2021-05-01",
+      "summary": "Studied IoT botnet C&C communication across 14 malware families; built a Random Forest detection system across three traffic types, achieving near-perfect F1 on decentralized botnets and 0.85 F1 on real centralized captures.",
+      "highlights": [
+        "Python3",
+        "AWS (EC2/S3)"
+      ]
+    },
+    {
+      "name": "Google Inc.",
+      "position": "Software Engineering Intern",
+      "url": "https://www.google.com/",
+      "startDate": "2019-07-01",
+      "endDate": "2019-09-01",
+      "summary": "Built metadata parsing logic for Google's internal AV-preset automation, reducing manual meeting room setup for one of the world's largest internal conferencing tools.",
+      "highlights": [
+        "JavaScript",
+        "HTML",
+        "CSS"
+      ]
+    },
+    {
+      "name": "CLE at Al Akhawayn University",
+      "position": "Project Coordinator and Developer",
+      "startDate": "2019-01-01",
+      "endDate": "2019-05-01",
+      "summary": "Built a web platform replacing a manual booking system, handling session bookings and hour logging across 79+ courses and 2050 students; later led the redesign.",
+      "highlights": [
+        "React",
+        "Node.js",
+        "HTML5",
+        "CSS"
+      ]
+    },
+    {
+      "name": "Sankhya Jiva Tecnologia e Inovação LTDA",
+      "position": "Software Engineering Intern",
+      "startDate": "2018-07-01",
+      "endDate": "2018-12-01",
+      "summary": "Replaced Dialogflow with a custom open-source temporal expression parser for Brazilian Portuguese in enterprise chatbot BIA to improve language accuracy and eliminate vendor lock-in; adopted and extended by the team post-internship.",
+      "highlights": [
+        "Java",
+        "JUnit",
+        "Kotlin"
+      ]
+    },
+    {
+      "name": "ASC Brazil",
+      "position": "Full-Stack Developer",
+      "startDate": "2018-01-01",
+      "endDate": "2018-06-01",
+      "summary": "Developed a social media management module for an ERP platform, enabling clients to read and post across YouTube, Facebook, Instagram, and Twitter directly from within the system.",
+      "highlights": [
+        "PHP/MySQL",
+        "NodeJS/MongoDB",
+        "HTML/CSS"
+      ]
+    }
+  ],
   "education": [
     {
-      "institution": "Aalto University, Espoo, Finland",
+      "institution": "Aalto University",
       "location": "Espoo, Finland",
       "url": "https://www.aalto.fi/",
-      "area": "Machine Learning",
-      "studyType": "PhD",
-      "startDate": "",
+      "area": "Machine learning applied to drug discovery",
+      "studyType": "Ph.D.",
+      "startDate": "2022-05-01",
       "endDate": ""
+    },
+    {
+      "institution": "University of Eastern Finland (UEF)",
+      "location": "Joensuu, Finland",
+      "url": "https://www.uef.fi/",
+      "area": "Information Technology (focus on data science, minor in statistics)",
+      "studyType": "M.Sc.",
+      "startDate": "2019-09-01",
+      "endDate": "2021-07-01"
+    },
+    {
+      "institution": "Al Akhawayn University in Ifrane",
+      "location": "Ifrane, Morocco",
+      "url": "https://www.aui.ma/",
+      "area": "Computer Science (minor in business administration)",
+      "studyType": "B.Sc.",
+      "startDate": "2015-09-01",
+      "endDate": "2019-06-01"
+    }
+  ],
+  "awards": [
+    {
+      "title": "Finland Fellowship",
+      "date": "2022",
+      "summary": "7.5 month salary and relocation bonus."
+    },
+    {
+      "title": "UEF IMPIT Scholarship",
+      "date": "2019",
+      "summary": "100% tuition and living expenses stipend."
+    },
+    {
+      "title": "Women Techmakers Scholar",
+      "date": "2018",
+      "awarder": "Google Inc. and Women Techmakers",
+      "summary": ""
+    },
+    {
+      "title": "Al Akhawayn University Excellence Scholarship",
+      "date": "2015",
+      "summary": "100% tuition and fees."
     }
   ],
   "publications": [
@@ -30,35 +178,81 @@
       "releaseDate": "2025",
       "url": "https://openreview.net/forum?id=onIro14tHv",
       "summary": "We demonstrate that standard permutation equivariant denoisers face fundamental limitations in graph-to-graph translation tasks and propose aligning input and target graphs to break input symmetries while preserving permutation equivariance."
+    },
+    {
+      "name": "Conditional Flow Matching for Time Series Modelling",
+      "publisher": "ICML 2024 Workshop on Structured Probabilistic Inference & Generative Modeling",
+      "releaseDate": "2024",
+      "url": "https://openreview.net/forum?id=Hqn4Aj7xrQ"
+    },
+    {
+      "name": "Aligned Diffusion Models for Retrosynthesis",
+      "publisher": "ICML 2024 Workshop on Geometry-grounded Representation Learning and Generative Modeling",
+      "releaseDate": "2024",
+      "url": "https://openreview.net/forum?id=fcF0Kal3Tc"
     }
   ],
   "skills": [
     {
       "name": "Machine Learning",
       "level": "",
-      "icon": "fa-solid fa-hashtag",
+      "icon": "fa-solid fa-brain",
       "keywords": [
-        "Graph Neural Networks",
-        "Diffusion Models",
-        "Drug Discovery",
-        "Retrosynthesis"
+        "PyTorch",
+        "JAX",
+        "TensorFlow",
+        "Scikit-Learn"
+      ]
+    },
+    {
+      "name": "Software Engineering",
+      "level": "",
+      "icon": "fa-solid fa-code",
+      "keywords": [
+        "Python",
+        "Java",
+        "JavaScript",
+        "React",
+        "Node.js",
+        "Flask",
+        "Django"
+      ]
+    },
+    {
+      "name": "Infrastructure",
+      "level": "",
+      "icon": "fa-solid fa-server",
+      "keywords": [
+        "AWS (EC2/S3)",
+        "OpenShift",
+        "Docker"
       ]
     }
   ],
   "languages": [
     {
-      "language": "English",
-      "fluency": "Fluent",
+      "language": "Arabic",
+      "fluency": "Native speaker",
       "icon": ""
     },
     {
       "language": "French",
-      "fluency": "Fluent",
+      "fluency": "Professional proficiency",
       "icon": ""
     },
     {
-      "language": "Arabic",
-      "fluency": "Native speaker",
+      "language": "English",
+      "fluency": "Professional proficiency",
+      "icon": ""
+    },
+    {
+      "language": "Portuguese",
+      "fluency": "Intermediate",
+      "icon": ""
+    },
+    {
+      "language": "Finnish",
+      "fluency": "Beginner",
       "icon": ""
     }
   ],
@@ -72,6 +266,59 @@
         "Retrosynthesis",
         "Generative Models"
       ]
+    },
+    {
+      "name": "Applications",
+      "icon": "fa-solid fa-flask",
+      "keywords": [
+        "Computational Chemistry",
+        "Genomics",
+        "Single-cell Analysis"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "RxnLab: Open platform for retrosynthetic analysis",
+      "summary": "Open platform bridging ML research and chemistry practice, hosting retrosynthetic models on CSC's Rahti infrastructure.",
+      "highlights": [
+        "Flask",
+        "RDKit",
+        "PyTorch",
+        "JavaScript",
+        "OpenShift"
+      ],
+      "url": "https://github.com/najwalb/rxnlab.git"
+    },
+    {
+      "name": "Denoising scRNA-seq data using Bayesian Inference",
+      "summary": "Imputed dropout events in scRNA-seq data by fitting a Zero-Inflated Negative Binomial noise model via deep autoencoders.",
+      "highlights": [
+        "Python3",
+        "TensorFlow",
+        "Scikit-Learn"
+      ],
+      "url": "https://github.com/NajwaLaabid/Denoising-sc-RNA-seq"
+    },
+    {
+      "name": "Adversarial Resistance in Toxic Comments Detection",
+      "summary": "Showed that small-scale adversarial training improves robustness of toxic comment classifiers without degrading accuracy on clean data.",
+      "highlights": [
+        "Python3",
+        "PyTorch",
+        "Scikit-Learn"
+      ],
+      "url": "https://github.com/NajwaLaabid/Adversarial-Toxic"
+    },
+    {
+      "name": "Staffing Plan App for Jacobs Engineering (JESA) Group Inc.",
+      "summary": "Web-app managing resource allocation and project development for JESA Morocco.",
+      "highlights": [
+        "Django",
+        "JavaScript/jQuery",
+        "HTML5/CSS"
+      ],
+      "url": "https://github.com/NajwaLaabid/Staffing-App"
     }
   ]
 }

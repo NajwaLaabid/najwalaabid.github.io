@@ -3,18 +3,86 @@
   contents:
     - name: Full Name
       value: Najwa Laabid
-    - name: Languages
-      value: English, French, Arabic
+    - name: Email
+      value: najwa.laabid@aalto.fi
+    - name: Website
+      value: https://najwalaabid.github.io/
+    - name: GitHub
+      value: https://github.com/NajwaLaabid
 
 - title: Education
   type: time_table
   contents:
-    - title: PhD Student
+    - title: Doctoral Researcher (Ph.D. student)
       institution: Aalto University, Espoo, Finland
-      year: present
+      year: 2022 - present
       description:
         - Machine learning applied to drug discovery
-        - Advisor&colon; Dr. Vikas Garg
+    - title: M.Sc. in Information Technology
+      institution: University of Eastern Finland (UEF), Joensuu, Finland
+      year: 2019 - 2021
+      description:
+        - Focus on data science with a minor in statistics
+    - title: B.Sc. in Computer Science
+      institution: Al Akhawayn University in Ifrane, Ifrane, Morocco
+      year: 2015 - 2019
+      description:
+        - Minor in business administration
+
+- title: Experience
+  type: time_table
+  contents:
+    - title: Junior Researcher
+      institution: University of Eastern Finland, Kuopio, Finland
+      year: 2021 - 2022
+      description:
+        - Built a VAE model for a NeurIPS 2022 competition tackling multimodal single-cell integration, a core open problem in computational biology with direct implications for cancer disease profiling.
+    - title: ASCI Programme - Intern
+      institution: Aalto University, Espoo, Finland
+      year: Jun 2021 - Aug 2021
+      description:
+        - Implemented approximate inference for nonstationary Gaussian processes via Kalman smoothing in JAX, enabling GP models to adapt to signals with time-varying dynamics such as gravitational wave chirps.
+    - title: Thesis Placement - Data Analytics
+      institution: Ericsson Inc., Kirkkonummi, Finland
+      year: 2020 - 2021
+      description:
+        - Studied IoT botnet C&C communication across 14 malware families; built a Random Forest detection system across three traffic types, achieving near-perfect F1 on decentralized botnets and 0.85 F1 on real centralized captures.
+    - title: Software Engineering Intern
+      institution: Google Inc., Munich, Germany
+      year: Jul 2019 - Sep 2019
+      description:
+        - Built metadata parsing logic for Google's internal AV-preset automation, reducing manual meeting room setup for one of the world's largest internal conferencing tools.
+    - title: Project Coordinator and Developer
+      institution: CLE at Al Akhawayn University, Ifrane, Morocco
+      year: Jan 2019 - May 2019
+      description:
+        - Built a web platform replacing a manual booking system, handling session bookings and hour logging across 79+ courses and 2050 students; later led the redesign.
+    - title: Software Engineering Intern
+      institution: Sankhya Jiva Tecnologia e Inovação LTDA, Uberlândia, Brazil
+      year: Jul 2018 - Dec 2018
+      description:
+        - Replaced Dialogflow with a custom open-source temporal expression parser for Brazilian Portuguese in enterprise chatbot BIA to improve language accuracy and eliminate vendor lock-in.
+    - title: Full-Stack Developer
+      institution: ASC Brazil, Uberlândia, Brazil
+      year: Jan 2018 - Jun 2018
+      description:
+        - Developed a social media management module for an ERP platform, enabling clients to read and post across YouTube, Facebook, Instagram, and Twitter directly from within the system.
+
+- title: Honors and Awards
+  type: time_table
+  contents:
+    - year: 2022
+      items:
+        - Finland Fellowship (7.5 month salary and relocation bonus)
+    - year: 2019
+      items:
+        - UEF IMPIT Scholarship (100% tuition and living expenses stipend)
+    - year: 2018
+      items:
+        - Women Techmakers Scholar (by Google Inc. and Women Techmakers)
+    - year: 2015
+      items:
+        - Al Akhawayn University Excellence Scholarship (100% tuition and fees)
 
 - title: Academic Interests
   type: nested_list
@@ -22,5 +90,9 @@
     - title: Machine Learning
       items:
         - Graph diffusion models
-        - Drug discovery
-        - Retrosynthesis
+        - Drug discovery and retrosynthesis
+        - Generative models
+    - title: Applications
+      items:
+        - Computational chemistry
+        - Genomics and single-cell analysis
