@@ -30,7 +30,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "books-the-godfather",
+        },{id: "post-where-does-an-llm-agent-actually-help-mapping-the-boundary-in-a-drug-discovery-pipeline",
+      
+        title: "Where does an LLM agent actually help? Mapping the boundary in a drug-discovery...",
+      
+      description: "We won a hackathon by letting an LLM agent decide what a property-prediction model should learn from. The interesting part was finding where it stopped helping.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2026/where-llm-agents-help-drug-discovery/";
+        
+      },
+    },{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
           section: "Books",handler: () => {
