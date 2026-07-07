@@ -27,9 +27,7 @@
       "startDate": "2022-05-01",
       "endDate": "",
       "summary": "PhD research in machine learning applied to drug discovery, focusing on graph diffusion models for retrosynthesis.",
-      "highlights": [
-        "Published at ICLR 2025 and ICML 2024 workshops"
-      ]
+      "highlights": ["Published at ICLR 2025 and ICML 2024 workshops"]
     },
     {
       "name": "University of Eastern Finland",
@@ -38,10 +36,7 @@
       "startDate": "2021-09-01",
       "endDate": "2022-04-01",
       "summary": "Built a VAE model for a NeurIPS 2022 competition tackling multimodal single-cell integration, a core open problem in computational biology with direct implications for cancer disease profiling.",
-      "highlights": [
-        "PyTorch",
-        "AWS (EC2/S3)"
-      ]
+      "highlights": ["PyTorch", "AWS (EC2/S3)"]
     },
     {
       "name": "Aalto University",
@@ -50,11 +45,7 @@
       "startDate": "2021-06-01",
       "endDate": "2021-08-01",
       "summary": "Implemented approximate inference for nonstationary Gaussian processes via Kalman smoothing in JAX, enabling GP models to adapt to signals with time-varying dynamics such as gravitational wave chirps.",
-      "highlights": [
-        "PyTorch",
-        "JAX",
-        "AWS (EC2/S3)"
-      ]
+      "highlights": ["PyTorch", "JAX", "AWS (EC2/S3)"]
     },
     {
       "name": "Ericsson Inc.",
@@ -63,10 +54,7 @@
       "startDate": "2020-06-01",
       "endDate": "2021-05-01",
       "summary": "Studied IoT botnet C&C communication across 14 malware families; built a Random Forest detection system across three traffic types, achieving near-perfect F1 on decentralized botnets and 0.85 F1 on real centralized captures.",
-      "highlights": [
-        "Python3",
-        "AWS (EC2/S3)"
-      ]
+      "highlights": ["Python3", "AWS (EC2/S3)"]
     },
     {
       "name": "Google Inc.",
@@ -75,11 +63,7 @@
       "startDate": "2019-07-01",
       "endDate": "2019-09-01",
       "summary": "Built metadata parsing logic for Google's internal AV-preset automation, reducing manual meeting room setup for one of the world's largest internal conferencing tools.",
-      "highlights": [
-        "JavaScript",
-        "HTML",
-        "CSS"
-      ]
+      "highlights": ["JavaScript", "HTML", "CSS"]
     },
     {
       "name": "CLE at Al Akhawayn University",
@@ -87,12 +71,7 @@
       "startDate": "2019-01-01",
       "endDate": "2019-05-01",
       "summary": "Built a web platform replacing a manual booking system, handling session bookings and hour logging across 79+ courses and 2050 students; later led the redesign.",
-      "highlights": [
-        "React",
-        "Node.js",
-        "HTML5",
-        "CSS"
-      ]
+      "highlights": ["React", "Node.js", "HTML5", "CSS"]
     },
     {
       "name": "Sankhya Jiva Tecnologia e Inovação LTDA",
@@ -100,11 +79,7 @@
       "startDate": "2018-07-01",
       "endDate": "2018-12-01",
       "summary": "Replaced Dialogflow with a custom open-source temporal expression parser for Brazilian Portuguese in enterprise chatbot BIA to improve language accuracy and eliminate vendor lock-in; adopted and extended by the team post-internship.",
-      "highlights": [
-        "Java",
-        "JUnit",
-        "Kotlin"
-      ]
+      "highlights": ["Java", "JUnit", "Kotlin"]
     },
     {
       "name": "ASC Brazil",
@@ -112,11 +87,7 @@
       "startDate": "2018-01-01",
       "endDate": "2018-06-01",
       "summary": "Developed a social media management module for an ERP platform, enabling clients to read and post across YouTube, Facebook, Instagram, and Twitter directly from within the system.",
-      "highlights": [
-        "PHP/MySQL",
-        "NodeJS/MongoDB",
-        "HTML/CSS"
-      ]
+      "highlights": ["PHP/MySQL", "NodeJS/MongoDB", "HTML/CSS"]
     }
   ],
   "education": [
@@ -197,36 +168,19 @@
       "name": "Machine Learning",
       "level": "",
       "icon": "fa-solid fa-brain",
-      "keywords": [
-        "PyTorch",
-        "JAX",
-        "TensorFlow",
-        "Scikit-Learn"
-      ]
+      "keywords": ["PyTorch", "JAX", "TensorFlow", "Scikit-Learn"]
     },
     {
       "name": "Software Engineering",
       "level": "",
       "icon": "fa-solid fa-code",
-      "keywords": [
-        "Python",
-        "Java",
-        "JavaScript",
-        "React",
-        "Node.js",
-        "Flask",
-        "Django"
-      ]
+      "keywords": ["Python", "Java", "JavaScript", "React", "Node.js", "Flask", "Django"]
     },
     {
       "name": "Infrastructure",
       "level": "",
       "icon": "fa-solid fa-server",
-      "keywords": [
-        "AWS (EC2/S3)",
-        "OpenShift",
-        "Docker"
-      ]
+      "keywords": ["AWS (EC2/S3)", "OpenShift", "Docker"]
     }
   ],
   "languages": [
@@ -260,64 +214,37 @@
     {
       "name": "Machine Learning",
       "icon": "fa-solid fa-tag",
-      "keywords": [
-        "Graph Diffusion Models",
-        "Drug Discovery",
-        "Retrosynthesis",
-        "Generative Models"
-      ]
+      "keywords": ["Graph Diffusion Models", "Drug Discovery", "Retrosynthesis", "Generative Models"]
     },
     {
       "name": "Applications",
       "icon": "fa-solid fa-flask",
-      "keywords": [
-        "Computational Chemistry",
-        "Genomics",
-        "Single-cell Analysis"
-      ]
+      "keywords": ["Computational Chemistry", "Genomics", "Single-cell Analysis"]
     }
   ],
   "projects": [
     {
       "name": "RxnLab: Open platform for retrosynthetic analysis",
       "summary": "Open platform bridging ML research and chemistry practice, hosting retrosynthetic models on CSC's Rahti infrastructure.",
-      "highlights": [
-        "Flask",
-        "RDKit",
-        "PyTorch",
-        "JavaScript",
-        "OpenShift"
-      ],
+      "highlights": ["Flask", "RDKit", "PyTorch", "JavaScript", "OpenShift"],
       "url": "https://github.com/najwalb/rxnlab.git"
     },
     {
       "name": "Denoising scRNA-seq data using Bayesian Inference",
       "summary": "Imputed dropout events in scRNA-seq data by fitting a Zero-Inflated Negative Binomial noise model via deep autoencoders.",
-      "highlights": [
-        "Python3",
-        "TensorFlow",
-        "Scikit-Learn"
-      ],
+      "highlights": ["Python3", "TensorFlow", "Scikit-Learn"],
       "url": "https://github.com/NajwaLaabid/Denoising-sc-RNA-seq"
     },
     {
       "name": "Adversarial Resistance in Toxic Comments Detection",
       "summary": "Showed that small-scale adversarial training improves robustness of toxic comment classifiers without degrading accuracy on clean data.",
-      "highlights": [
-        "Python3",
-        "PyTorch",
-        "Scikit-Learn"
-      ],
+      "highlights": ["Python3", "PyTorch", "Scikit-Learn"],
       "url": "https://github.com/NajwaLaabid/Adversarial-Toxic"
     },
     {
       "name": "Staffing Plan App for Jacobs Engineering (JESA) Group Inc.",
       "summary": "Web-app managing resource allocation and project development for JESA Morocco.",
-      "highlights": [
-        "Django",
-        "JavaScript/jQuery",
-        "HTML5/CSS"
-      ],
+      "highlights": ["Django", "JavaScript/jQuery", "HTML5/CSS"],
       "url": "https://github.com/NajwaLaabid/Staffing-App"
     }
   ]

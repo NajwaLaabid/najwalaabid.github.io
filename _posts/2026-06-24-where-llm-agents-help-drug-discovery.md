@@ -29,10 +29,10 @@ toc:
 ---
 
 Modern drug discovery leans hard on prediction: rather than measure every property of every
-candidate in the lab, you train models to guess them *in silico* and only run the
+candidate in the lab, you train models to guess them _in silico_ and only run the
 measurements you have to. When a property has too few labels to learn from, the standard
 trick is to borrow what a model already picked up from a related,
-better-measured property, also known as *transfer learning*. The catch is deciding which property to borrow from, and that is
+better-measured property, also known as _transfer learning_. The catch is deciding which property to borrow from, and that is
 exactly the kind of judgement call you might hope an AI agent could make. Here's where it
 can, and where a twenty-line heuristic does the job just as well.
 
@@ -40,20 +40,20 @@ can, and where a twenty-line heuristic does the job just as well.
 
 Before a molecule can become a drug, you need to know how it behaves in the body: how
 much of it is **A**bsorbed, how it **D**istributes, how fast it is **M**etabolised and
-**E**xcreted, and how **T**oxic it is. These five properties are known collectively as ADMET <d-cite key="waterbeemd2003admet"></d-cite>. Each one is a separate lab measurement, also known as an *assay*<d-footnote>This is also what we will call a set of measured compounds for one endpoint, i.e. a column in a dataset of molecular properties.</d-footnote>, where multiple candidate compounds are tested together whenever possible.
+**E**xcreted, and how **T**oxic it is. These five properties are known collectively as ADMET <d-cite key="waterbeemd2003admet"></d-cite>. Each one is a separate lab measurement, also known as an _assay_<d-footnote>This is also what we will call a set of measured compounds for one endpoint, i.e. a column in a dataset of molecular properties.</d-footnote>, where multiple candidate compounds are tested together whenever possible.
 
 Some assays are cheap, like an aqueous-solubility readout<d-footnote>The measurement is done by diluting a compound into aqueous buffer and reading off how much stays dissolved. Hundreds of compounds can be tested at once, with no cells or animals to keep alive.</d-footnote>, while a half-life toxicity endpoint (LD50) requires dosing animals with one compound at a time and drawing timed blood samples <d-cite key="kerns2016druglike"></d-cite>.
 For endpoints like the latter, requiring days of wet-lab work and real money per compound, assays often start with only 10–50 compounds.
 
-| ADMET stage | The question it answers | Common endpoints (**bold** = OpenADMET · *italic* = TDC) |
-|---|---|---|
-| **A**bsorption | Does it get into the bloodstream? | ***solubility (KSOL)***, ***permeability (Caco-2)***, **efflux (Caco-2 ratio)**, ***lipophilicity (LogD)***, *intestinal absorption (HIA)*, *P-gp inhibition*, *oral bioavailability* |
-| **D**istribution | Where in the body does it go? | ***protein binding (MPPB / MBPB / MGMB; PPBR)***, *volume of distribution (VDss)*, *blood–brain barrier (BBB)* |
-| **M**etabolism | How fast is it broken down? | ***microsomal clearance (HLM, MLM CLint)***, *hepatocyte clearance*, *CYP 2C9 / 2D6 / 3A4 inhibition & substrate* |
-| **E**xcretion | How is it cleared from the body? | *half-life*, renal clearance |
-| **T**oxicity | Could it cause harm? | *LD50*, *hERG (cardiac)*, *Ames (mutagenicity)*, *DILI (liver injury)* |
+| ADMET stage      | The question it answers           | Common endpoints (**bold** = OpenADMET · _italic_ = TDC)                                                                                                                              |
+| ---------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A**bsorption   | Does it get into the bloodstream? | **_solubility (KSOL)_**, **_permeability (Caco-2)_**, **efflux (Caco-2 ratio)**, **_lipophilicity (LogD)_**, _intestinal absorption (HIA)_, _P-gp inhibition_, _oral bioavailability_ |
+| **D**istribution | Where in the body does it go?     | **_protein binding (MPPB / MBPB / MGMB; PPBR)_**, _volume of distribution (VDss)_, _blood–brain barrier (BBB)_                                                                        |
+| **M**etabolism   | How fast is it broken down?       | **_microsomal clearance (HLM, MLM CLint)_**, _hepatocyte clearance_, _CYP 2C9 / 2D6 / 3A4 inhibition & substrate_                                                                     |
+| **E**xcretion    | How is it cleared from the body?  | _half-life_, renal clearance                                                                                                                                                          |
+| **T**oxicity     | Could it cause harm?              | _LD50_, _hERG (cardiac)_, _Ames (mutagenicity)_, _DILI (liver injury)_                                                                                                                |
 
-**Table 1.** Common ADMET endpoints by stage; **bold** = OpenADMET, *italic* = TDC.
+**Table 1.** Common ADMET endpoints by stage; **bold** = OpenADMET, _italic_ = TDC.
 {: .caption}
 
 A reasonable move is to train a model to predict the assay from a molecule's structure,
@@ -63,8 +63,8 @@ measurements gets us nothing. To show this, we train the same model on n=5 obser
 **0.06**, indistinguishable from guessing.
 
 The standard fix is transfer learning: instead of training from scratch, pretrain the
-model on past assays you already have labels for, then fine-tune it on the few new ones <d-cite key="pan2010survey"></d-cite>. The catch is *which* past assays to pretrain on.
-Take lipophilicity (LogD) with only five labels, pretraining on one other assay at a time: a mechanistically related source like plasma protein binding lifts Spearman from noise (ρ≈0) to 0.57, while an unrelated one like Caco-2 efflux pushes it *below* the no-transfer line (negative transfer).
+model on past assays you already have labels for, then fine-tune it on the few new ones <d-cite key="pan2010survey"></d-cite>. The catch is _which_ past assays to pretrain on.
+Take lipophilicity (LogD) with only five labels, pretraining on one other assay at a time: a mechanistically related source like plasma protein binding lifts Spearman from noise (ρ≈0) to 0.57, while an unrelated one like Caco-2 efflux pushes it _below_ the no-transfer line (negative transfer).
 
 <figure class="expdisc-figure">
   <div class="expdisc-chart" id="expdisc-fig-negtransfer" style="width:100%; height:460px;"></div>
@@ -78,7 +78,7 @@ Which assays help is usually settled by a senior scientist's intuition, but ther
 cheap signals you can compute in addition: how strongly a candidate assay correlates with the
 target (which requires enough measurements), how much the assays' molecules overlap, or classical transferability scores <d-cite key="nguyen2020leep,you2021logme"></d-cite> like LEEP and LogME, which estimate how well a source will transfer from its model's features alone, without paying to fine-tune on it first.
 
-In this project, we explore how well an LLM-agent chooses the assays to pretrain on compared to traditional baselines. We hold the predictor fixed (a plain MLP where we swap the final layer when training on each different property) so any improvement comes from *selection*, not a fancier model. Then we ask two things: 1) can an LLM agent choose a better set of source assays than these baselines?, and 2) can it run the whole pipeline (selecting the assays, deciding how many new compounds to measure, and choose which specific compounds to use in the new assay), end to end on its own?
+In this project, we explore how well an LLM-agent chooses the assays to pretrain on compared to traditional baselines. We hold the predictor fixed (a plain MLP where we swap the final layer when training on each different property) so any improvement comes from _selection_, not a fancier model. Then we ask two things: 1) can an LLM agent choose a better set of source assays than these baselines?, and 2) can it run the whole pipeline (selecting the assays, deciding how many new compounds to measure, and choose which specific compounds to use in the new assay), end to end on its own?
 
 The [interactive demo](https://admet-demo-diffalign.2.rahtiapp.fi/) and the [code](https://github.com/NajwaLaabid/assay-transfer-agent) are online if you'd rather see the agnet at work first; otherwise, read on for how we got there.
 
@@ -104,7 +104,7 @@ signal is trustworthy; TDC tests it when that signal is gone.
 </figure>
 
 The predictor is the same simple model in every experiment, with or without the agent: a
-small neural network<d-footnote>A shared-trunk MLP, 2248&rarr;512&rarr;128. Each molecule enters as a SMILES string, which RDKit turns into a fixed 2248-number vector: a 2048-bit ECFP4 fingerprint (a Morgan fingerprint of radius 2 — a bit-vector recording which substructures the molecule contains) concatenated with ~200 RDKit 2D physicochemical descriptors (molecular weight, LogP, hydrogen-bond counts, and the like). This featurization is deliberately plain; a fancier representation — a graph neural network over the molecular graph, learned embeddings, or richer descriptors — would likely predict better, but we hold it fixed on purpose so any gain traces to source *selection*, not the model.</d-footnote>
+small neural network<d-footnote>A shared-trunk MLP, 2248&rarr;512&rarr;128. Each molecule enters as a SMILES string, which RDKit turns into a fixed 2248-number vector: a 2048-bit ECFP4 fingerprint (a Morgan fingerprint of radius 2 — a bit-vector recording which substructures the molecule contains) concatenated with ~200 RDKit 2D physicochemical descriptors (molecular weight, LogP, hydrogen-bond counts, and the like). This featurization is deliberately plain; a fancier representation — a graph neural network over the molecular graph, learned embeddings, or richer descriptors — would likely predict better, but we hold it fixed on purpose so any gain traces to source _selection_, not the model.</d-footnote>
 that turns a molecule's structure into a predicted assay value. We pretrain it on the
 chosen source assays, freeze it, and fit a simple linear read-out (a ridge regression) on
 the few target labels.
@@ -126,7 +126,7 @@ code would run against any hosted model by swapping one string.
 
 ## First, the baselines
 
-Before handing anything to an agent, it's worth knowing what can be achieved with existing heuristics. Every method here uses the *same* fixed predictor (the MLP described earlier); the only difference is which source assays are picked to pretrain on. Five rungs, floor to ceiling: **no transfer** at all, a **random** pair of sources, **all** sources pooled, a **correlation heuristic** that ranks sources by how strongly they track the target and keeps adding until the score stops improving, and a brute-force
+Before handing anything to an agent, it's worth knowing what can be achieved with existing heuristics. Every method here uses the _same_ fixed predictor (the MLP described earlier); the only difference is which source assays are picked to pretrain on. Five rungs, floor to ceiling: **no transfer** at all, a **random** pair of sources, **all** sources pooled, a **correlation heuristic** that ranks sources by how strongly they track the target and keeps adding until the score stops improving, and a brute-force
 **oracle** that tries every possible subset and keeps the best.
 
 <figure class="expdisc-figure">
@@ -138,11 +138,11 @@ Before handing anything to an agent, it's worth knowing what can be achieved wit
 </figure>
 
 Two things fall out of this ladder. First, **transfer is the whole game**: going from
-no-transfer to *any* pretraining is a 5× jump, far bigger than any gap between selection
+no-transfer to _any_ pretraining is a 5× jump, far bigger than any gap between selection
 methods. Second, **pooling everything is not the same as choosing well**: "all sources" sits at
 0.46 while the oracle reaches 0.53, and a curated subset beats all-source pooling on 8 of 9
 targets. Combining many assays mitigates negative transfer, so the pool never drops below
-the floor; but the effect is still visible as *dilution*, which is exactly why the
+the floor; but the effect is still visible as _dilution_, which is exactly why the
 pretraining sources are worth choosing well. The best subset is small: performance peaks at
 two or three well-chosen sources, then decays steadily as you pile on more.
 
@@ -154,13 +154,13 @@ two or three well-chosen sources, then decays steadily as you pile on more.
   <!-- <figcaption class="caption">Why selection matters: the best subset peaks at two or three assays, then dilutes as you pile on more. Hover a point for the exact rank correlation and the sources most often chosen at that size.</figcaption> -->
 </figure>
 
-And here's the catch that sets up everything after: the best subset is *different for every
-target*. Yet a plain correlation ranking
+And here's the catch that sets up everything after: the best subset is _different for every
+target_. Yet a plain correlation ranking
 already recovers 96% of the oracle's gain. So on a dataset like this, where every assay is
 co-measured, so correlation is a clean, trustworthy signal, a twenty-line heuristic gets
-you *most* of the way to optimal. Which raises the real question: **is there anything left
+you _most_ of the way to optimal. Which raises the real question: **is there anything left
 for an agent to do?** Two places it might. At the coldest start ($n=5$), where correlation
-is estimated from almost no data and turns noisy. And on datasets where assays *don't* share
+is estimated from almost no data and turns noisy. And on datasets where assays _don't_ share
 molecules, so a correlation can't be computed at all. Both are exactly where we look next.
 
 ## Our agent
@@ -215,16 +215,16 @@ coldest start ($n=5$), where a correlation estimated from five points is least t
 </figure>
 
 Where the heuristic has enough co-measured points to trust its correlation, reasoning adds little and the two converge. But at the $n=5$ cold start, where a five-point correlation is mostly noise, the agent is already ahead: it wins precisely where the cheap
-signal doesn't yet exist. 
+signal doesn't yet exist.
 
-To further showcase this, we evaluate on a dataset where correlation is unreliable by design. 
-On the Therapeutics Data Commons benchmark <d-cite key="huang2021tdc"></d-cite> (22 ADMET tasks, mostly *not*
-co-measured, so correlation is often undefined), the agent's edge over the heuristic *grows
-with data*: its win-rate climbs from 55% to 82% as you give it more shots, because its
+To further showcase this, we evaluate on a dataset where correlation is unreliable by design.
+On the Therapeutics Data Commons benchmark <d-cite key="huang2021tdc"></d-cite> (22 ADMET tasks, mostly _not_
+co-measured, so correlation is often undefined), the agent's edge over the heuristic _grows
+with data_: its win-rate climbs from 55% to 82% as you give it more shots, because its
 `evaluate` signal sharpens while a static correlation statistic does not. Same agent; the difference is whether the cheap
 baseline is fixable. On the nine regression tasks, where small-sample correlation is
 noisiest, the agent leads every baseline at every budget. Naive pooling or random
-selection sink *below* no-transfer, the same collapse we saw once OpenADMET's source pool grew.
+selection sink _below_ no-transfer, the same collapse we saw once OpenADMET's source pool grew.
 
 <figure class="expdisc-figure">
   <div class="expdisc-chart" id="expdisc-fig-tdc-baselines" style="width:100%; height:470px;"></div>
@@ -234,7 +234,7 @@ selection sink *below* no-transfer, the same collapse we saw once OpenADMET's so
   <!-- <figcaption class="caption">The plain agent against every non-LLM baseline on TDC's nine regression tasks (no oracle here — molecule-disjoint tasks can't be enumerated over shared molecules). The agent (violet) leads at every budget, while pooling all sources or picking at random drops below no-transfer. Hover to compare.</figcaption> -->
 </figure>
 
-One test pins down *where* that lead comes from. The agent reads two kinds of information — the
+One test pins down _where_ that lead comes from. The agent reads two kinds of information — the
 correlation statistics and the assays' text descriptions — so we removed each in turn. Strip
 the descriptions and it falls back to the plain correlation heuristic (worst at $n=50$, where
 that heuristic is weakest); strip the correlations instead and it keeps almost all of its edge.
@@ -248,25 +248,25 @@ What the reasoning adds is the biology in the metadata, not the statistics.
   <!-- <figcaption class="caption">Ablation on the same tasks. The full agent (violet) and a metadata-only variant climb with data; strip the assay descriptions (corr-only, dashed) and the agent collapses to the correlation heuristic at n=50. Hover to compare.</figcaption> -->
 </figure>
 
-So far the agent has made a single call — *what to transfer from* — and made it well,
+So far the agent has made a single call — _what to transfer from_ — and made it well,
 pulling ahead exactly where the cheap statistics run out. But source selection is one
 decision in a campaign that has many. Can the same reasoning drive the rest?
 
 ## How far can one agent go?
 
-A real campaign is a chain of decisions, not one: past *which* assays to borrow from, someone
-must choose *how many* compounds to label and *which* ones. We hand both to the agent — one it
+A real campaign is a chain of decisions, not one: past _which_ assays to borrow from, someone
+must choose _how many_ compounds to label and _which_ ones. We hand both to the agent — one it
 aces, one it flubs.
 
-**Can it run the whole pipeline?** By *whole pipeline* we mean the three decisions taken
+**Can it run the whole pipeline?** By _whole pipeline_ we mean the three decisions taken
 together — which source assays to pretrain on, how many new target compounds to label ($n$),
 and which specific compounds to pick — made inside a single loop and judged by one held-out
 test evaluation at the very end. We give this to one agent running a **reason–act loop**
 (the ReAct pattern <d-cite key="yao2023react"></d-cite>: the model alternates a written
-*thought* with a concrete *action*, then uses what it observes to choose the next move). Its
+_thought_ with a concrete _action_, then uses what it observes to choose the next move). Its
 actions come from a fixed toolset: `inspect_data` and `source_stats` to orient itself
 (coverage, value ranges, correlations, the no-transfer floor), `evaluate` to run one full
-configuration — sources, acquisition method, $n$ — and read back its *validation* score,
+configuration — sources, acquisition method, $n$ — and read back its _validation_ score,
 `run_python` for a persistent sandbox where it can test its own hypotheses (compute a
 statistic, try a descriptor), and `finalize` to commit a configuration plus a chemist-facing
 report. A run takes 9–14 of these steps; the test set is revealed exactly once, on whatever it
@@ -291,7 +291,7 @@ MBPB, lightly trimmed:
 
 On the three sparsest endpoints — the genuinely label-starved ones, 222 to 1,300 labels — it
 reaches **96% of the brute-force oracle** and **+56% over no transfer**, beating the floor on
-all nine runs; the win concentrates where labels are scarcest. But it does not *beat* the
+all nine runs; the win concentrates where labels are scarcest. But it does not _beat_ the
 strong human baseline. Our expert **greedy pipeline** — rank the candidate sources by their
 correlation to the target, add them one at a time as long as the validation score keeps
 rising, stop when it doesn't — lands in the same place: averaged over the three targets the
@@ -307,17 +307,17 @@ agent scores ρ≈0.69 against greedy's ρ≈0.70, a tie well inside the seed-to
 
 The claim is automation, not dominance: one agent that also tunes the
 knobs a human would, matching the expert and nearly reaching the oracle, while writing down
-its reasoning. And on the *hardest* target — MPPB, the lowest floor (ρ≈0.32 from scratch) —
+its reasoning. And on the _hardest_ target — MPPB, the lowest floor (ρ≈0.32 from scratch) —
 it does edge past greedy, ρ≈0.68 to 0.66. The reasoning earns the most where transfer is
 hardest.
 
 **Can it pick which molecules to measure first (acquisition)?** This is the neighbouring question, and
-arguably the more valuable one to a chemist: with *zero* labels on a new target, which
+arguably the more valuable one to a chemist: with _zero_ labels on a new target, which
 molecules do you measure first to bootstrap the assay? Acquisition was already one knob in the
 pipeline above, but buried there — the agent just picked a named algorithm (`kmedoids`,
-`farthest_first`, …) to sub-sample a pool that *already had* labels, and its effect was
+`farthest_first`, …) to sub-sample a pool that _already had_ labels, and its effect was
 tangled up with the source and budget choices in a single score. Here we strip it out and make
-it harder: no labels at all, and the agent must reason about *individual* molecules from their
+it harder: no labels at all, and the agent must reason about _individual_ molecules from their
 structure rather than call a canned method — precisely the setting where a model's chemical
 knowledge should pay off, if it ever does. We build it a per-molecule recommender — it reads
 the other assays' values plus RDKit descriptors and names specific molecules, with a reason for
@@ -326,11 +326,11 @@ each ("unique scaffold and low LogD", "high Caco-2 efflux", "similar to m12, ski
 We try the acquisition agent three ways,
 each given more to work with: one **allocates a labeling budget across chemical clusters**,
 one **names individual molecules** from a shortlist with a reason for each, and one gets
-k-medoids'<d-footnote>k-medoids is a clustering method that picks <em>k</em> actual data points as cluster centres, so the chosen molecules are real, maximally-spread representatives of the pool. With no target labels to learn from, spreading the measurements evenly across chemical space — covering the range of structures instead of clumping — is the sensible default, which is why it is a strong baseline here.</d-footnote> *exact* input — the full pool embedding — with the heuristic itself as a callable
+k-medoids'<d-footnote>k-medoids is a clustering method that picks <em>k</em> actual data points as cluster centres, so the chosen molecules are real, maximally-spread representatives of the pool. With no target labels to learn from, spreading the measurements evenly across chemical space — covering the range of structures instead of clumping — is the sensible default, which is why it is a strong baseline here.</d-footnote> _exact_ input — the full pool embedding — with the heuristic itself as a callable
 tool. At the true cold start ($n=5$), representative sampling is what matters and **k-medoids
 leads**; no agent variant beats it. Past a handful of picks the field just converges — the
 gaps fall inside the seed-to-seed noise, and on a set as chemically homogeneous as OpenADMET
-even *random* selection catches up, edging ahead by $n=25$. Once you have more than a few
+even _random_ selection catches up, edging ahead by $n=25$. Once you have more than a few
 molecules, coverage is easy and how you choose stops mattering.
 
 <figure class="expdisc-figure">
@@ -344,12 +344,12 @@ molecules, coverage is easy and how you choose stops mattering.
 The lesson is that **k-medoids is a genuinely good heuristic**
 for this job. Spreading picks to cover the embedding is close to the right objective for
 "which molecules are worth labeling," and it costs nothing. Reasoning over each molecule's name
-and descriptors — the thing the LLM adds — lands *below* that at the cold start: guessing which
+and descriptors — the thing the LLM adds — lands _below_ that at the cold start: guessing which
 compound is informative from its structure is harder than simply covering the space, and even
 handing the agent k-medoids as a tool only lets it match the heuristic, never beat it. Could a
 model with deeper medicinal-chemistry knowledge do better — flag a redundant scaffold the
 geometry misses? Maybe; on this data it didn't. (The per-molecule agent still earns its place
-in the demo as the *interpretable* layer — every pick comes with an auditable chemical reason —
+in the demo as the _interpretable_ layer — every pick comes with an auditable chemical reason —
 but that's transparency, not accuracy.)
 
 ## Conclusion, demo and code
@@ -377,6 +377,6 @@ Try the agent [here](https://admet-demo-diffalign.2.rahtiapp.fi/): it suggests w
 to measure next and explains each pick. The [code](https://github.com/NajwaLaabid/assay-transfer-agent)
 is on GitHub.
 
-*Built with Halidu Abdulai (Åbo Akademi University), Anirudh Jain (Orion), Ilari Tulkki (CSC), and Gerardo Gonzalez (Silo AI) at the Exponential Discovery in Life Sciences hackathon.*
+_Built with Halidu Abdulai (Åbo Akademi University), Anirudh Jain (Orion), Ilari Tulkki (CSC), and Gerardo Gonzalez (Silo AI) at the Exponential Discovery in Life Sciences hackathon._
 
 <script src="{{ '/assets/js/expdisc-charts.js' | relative_url }}"></script>

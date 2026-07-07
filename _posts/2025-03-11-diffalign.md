@@ -71,26 +71,40 @@ _styles: >
     font-size: 16px;
   }
 ---
+
 ## Diffusion for Graph Translation
+
 - why
 - advantages
 - retrosynthesis as an example
 - diffusion with its classical components (i.e. equivariant denoiser) practically fails.
+
 ## Symmetry and Equivariance
+
 ### Equivariance illustrated
+
 ### What happens when the input is symmetrical?
+
 ### Example: copying graphs
+
 ### The limitations of equivariance in a theorem
+
 ## Solution: Aligned Equivariance
+
 - relax equivariance just enough with node identifiers
 - solutions from different papers studying equivariance
 - aligned equivariance for graph translation in particular: identify nodes + extra inductive biases/information for graphs
+
 ### Alignment methods
+
 ### Mathematical properites of the aligned equivariant denoiser
+
 ## Results
+
 ### Retrosynthesis
+
 ### Inpainting
+
 ### Guidance
+
 ## Try it yourself
-
-
