@@ -1133,9 +1133,9 @@
       }
       // one style per method, shared by both panels, so a single legend reads across the figure.
       // k-medoids and D-optimal carry the story (representative sampling) and stay emphasised in
-      // both. The agent is one series name across both panels so the legend reads as one method;
-      // the two panels ran different prompts (OpenADMET even-handed, TDC k-medoids-anchored),
-      // which the post covers in a footnote rather than the legend.
+      // both. The agent is one series name across both panels so the legend reads as one method.
+      // NB not yet a matched pair: OpenADMET ran the even-handed prompt, TDC the k-medoids-anchored
+      // one. Swap TDC's row for the even-handed rerun once it lands so both panels share a prompt.
       var STYLE = {
         random: [c.inkSoft, { width: 1.8 }],
         "farthest-first": [c.cat[7], {}],

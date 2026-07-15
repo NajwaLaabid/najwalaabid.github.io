@@ -273,7 +273,7 @@ D-optimal design<d-footnote>D-optimal design comes from optimal experimental des
 the current fit is least certain about, which is also the one
 that most increases the determinant of the information matrix.</d-footnote>. When
 handed a sandbox and a set of tools, the agent does not design an acquisition strategy of its own, instead it
-calls one of the tools and finalizes its picks. In both cases the agent lands wherever that tool (and its corresponding baseline) lands. When a simple algorithm already captures the signal the agent has nothing of its own to add, and on datasets this small a
+calls one of the tools and finalizes its picks. For both datasets, the agent lands wherever that tool (and its corresponding baseline) lands. When a simple algorithm already captures the signal the agent has nothing of its own to add, and on datasets this small a
 well-chosen algorithm matches or beats it.
 
 <div class="l-page" markdown="0">
