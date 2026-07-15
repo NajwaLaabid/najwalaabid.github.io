@@ -30,9 +30,9 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-how-well-can-an-llm-agent-select-assays-for-transfer-learning",
+        },{id: "post-where-do-llm-agents-help-with-property-prediction",
       
-        title: "How well can an LLM-Agent select assays for transfer learning?",
+        title: "Where do LLM agents help with property prediction?",
       
       description: "",
       section: "Posts",
