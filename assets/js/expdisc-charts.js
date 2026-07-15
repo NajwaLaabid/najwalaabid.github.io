@@ -173,7 +173,7 @@
     };
     var NS = ["5", "10", "25", "50"];
     return function (c) {
-      var o = base(c, "The best subset is small, then extra sources dilute", "best-of-size-k, averaged over 9 targets");
+      var o = base(c, "The best subset is small, then extra sources dilute", "OpenADMET, best-of-size-k averaged over 9 targets");
       o.legend = {
         top: 46,
         textStyle: { color: c.ink },
@@ -413,6 +413,24 @@
     return o;
   }
 
+  // horizontal reference line (e.g. full-label ceiling) for the line-vs-n charts
+  function refLine(c, npts, y, label, dash) {
+    return {
+      name: label,
+      type: "line",
+      data: new Array(npts).fill(null),
+      lineStyle: { width: 0 },
+      itemStyle: { color: c.inkSoft },
+      markLine: {
+        silent: true,
+        symbol: "none",
+        lineStyle: { color: c.inkSoft, type: dash || "dashed", width: 1.5 },
+        label: { color: c.inkSoft, formatter: label + " " + y.toFixed(2), position: "insideEndTop" },
+        data: [{ yAxis: y }],
+      },
+    };
+  }
+
   // vertical ±SEM whiskers for a line series, offset horizontally so methods don't overlap.
   // Shares the line's name so the legend toggles line + whiskers together.
   function errorBars(name, means, sems, color, xoffPx) {
@@ -519,87 +537,252 @@
   };
 
   // ---- data coverage (setup): per-endpoint train coverage, source vs target ----
+  // ---- setup: the two evaluation datasets, side by side (two grids) ----
+  // Left  = OpenADMET, 9 densely co-measured assays (correlation is a strong
+  //         source-selection signal), colored by role.
+  // Right = TDC, 22 molecule-disjoint assays (metadata replaces correlation),
+  //         split into regression vs classification blocks. Same x-axis on both.
   FIG["expdisc-fig-coverage"] = function () {
-    var D = [
-      ["KSOL (solubility)", 96, 5128, "source"],
-      ["LogD", 95, 5039, "source"],
-      ["MLM clearance", 85, 4522, "source"],
-      ["HLM clearance", 71, 3759, "source"],
-      ["Caco-2 Papp", 40, 2157, "source"],
-      ["Caco-2 efflux", 41, 2161, "source"],
-      ["plasma binding", 24, 1302, "target"],
-      ["brain binding", 18, 975, "target"],
-      ["muscle binding", 4, 222, "target"],
+    // [label, molecules, coverage%, role] — ascending, so first item sits at bottom
+    var OA = [
+      ["muscle binding", 222, 4, "target"],
+      ["brain binding", 975, 18, "target"],
+      ["plasma binding", 1302, 24, "target"],
+      ["Caco-2 Papp", 2157, 40, "source"],
+      ["Caco-2 efflux", 2161, 41, "source"],
+      ["HLM clearance", 3759, 71, "source"],
+      ["MLM clearance", 4522, 85, "source"],
+      ["LogD", 5039, 95, "source"],
+      ["KSOL (solubility)", 5128, 96, "source"],
     ];
+    // [label, molecules, type] — regression block then classification block,
+    // each ascending, so the two color blocks stack cleanly (reg bottom, cls top)
+    var TDC = [
+      ["half-life", 667, "regression"],
+      ["Caco-2 permeability", 910, "regression"],
+      ["clearance (microsome)", 1102, "regression"],
+      ["volume of distribution", 1130, "regression"],
+      ["clearance (hepatocyte)", 1213, "regression"],
+      ["plasma protein binding", 2790, "regression"],
+      ["lipophilicity", 4200, "regression"],
+      ["acute toxicity (LD50)", 7385, "regression"],
+      ["solubility", 9982, "regression"],
+      ["liver injury (DILI)", 475, "classification"],
+      ["intestinal absorption", 578, "classification"],
+      ["bioavailability", 640, "classification"],
+      ["hERG blockade", 655, "classification"],
+      ["CYP2D6 substrate", 667, "classification"],
+      ["CYP2C9 substrate", 669, "classification"],
+      ["CYP3A4 substrate", 670, "classification"],
+      ["P-gp inhibition", 1218, "classification"],
+      ["blood-brain barrier", 2030, "classification"],
+      ["mutagenicity (Ames)", 7278, "classification"],
+      ["CYP2C9 inhibition", 12092, "classification"],
+      ["CYP3A4 inhibition", 12328, "classification"],
+      ["CYP2D6 inhibition", 13130, "classification"],
+    ];
+    var nReg = 0;
+    TDC.forEach(function (r) {
+      if (r[2] === "regression") nReg++;
+    });
     return function (c) {
-      var o = base(c, "One dataset, a steep coverage gradient", "OpenADMET: % of training molecules with a measured label");
-      o.grid = { left: 118, right: 60, top: 88, bottom: 52 };
-      o.tooltip.trigger = "item";
-      o.tooltip.formatter = function (p) {
-        var row = D[p.dataIndex];
-        return (
-          "<b>" +
-          row[0] +
-          "</b><br/>" +
-          row[1] +
-          "% measured (" +
-          row[2].toLocaleString() +
-          " molecules)<br/>" +
-          '<span style="opacity:.7">' +
-          (row[3] === "source" ? "data-rich → transfer source" : "data-poor → few-shot target") +
-          "</span>"
-        );
-      };
-      o.legend = {
-        top: 46,
-        textStyle: { color: c.ink },
-        data: [{ name: "data-rich source" }, { name: "data-poor target" }],
-      };
-      o.xAxis = {
-        type: "value",
-        max: 100,
-        name: "% of molecules measured",
-        nameLocation: "middle",
-        nameGap: 26,
-        axisLine: { show: false },
-        splitLine: { lineStyle: { color: c.grid } },
-        axisLabel: { color: c.ink, formatter: "{value}%" },
-        nameTextStyle: { color: c.ink },
-      };
-      o.yAxis = {
-        type: "category",
-        inverse: true,
-        data: D.map(function (r) {
-          return r[0];
-        }),
-        axisLine: { lineStyle: { color: c.grid } },
-        axisTick: { show: false },
-        axisLabel: { color: c.ink },
-      };
-      function bars(role, color, name) {
+      var oaSrc = c.cat[1],
+        oaTgt = c.cat[7]; // aqua-green / orange
+      var tReg = c.cat[4],
+        tCls = c.cat[2]; // violet / yellow
+
+      function oaBar(role, color, name) {
         return {
           name: name,
           type: "bar",
-          barWidth: "62%",
-          stack: "x",
+          xAxisIndex: 0,
+          yAxisIndex: 0,
+          barWidth: "64%",
+          barGap: "-100%",
           color: color,
-          data: D.map(function (r) {
-            return r[3] === role ? { value: r[1], itemStyle: { borderRadius: 3 } } : "-";
+          data: OA.map(function (r) {
+            return r[3] === role ? { value: r[1], cov: r[2], itemStyle: { borderRadius: 3 } } : "-";
           }),
           label: {
             show: true,
             position: "right",
             color: c.inkSoft,
+            fontSize: 10,
             formatter: function (p) {
-              return D[p.dataIndex][1] + "%";
+              return p.data && p.data.cov != null ? p.data.cov + "%" : "";
             },
           },
         };
       }
-      o.series = [bars("source", c.cat[0], "data-rich source"), bars("target", c.cat[4], "data-poor target")];
-      return o;
+      function tBar(ty, color, name, withSplit) {
+        var s = {
+          name: name,
+          type: "bar",
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          barWidth: "70%",
+          barGap: "-100%",
+          color: color,
+          data: TDC.map(function (r) {
+            return r[2] === ty ? { value: r[1], itemStyle: { borderRadius: 3 } } : "-";
+          }),
+          label: {
+            show: true,
+            position: "right",
+            color: c.inkSoft,
+            fontSize: 8.5,
+            formatter: function (p) {
+              return p.value ? p.value.toLocaleString() : "";
+            },
+          },
+        };
+        if (withSplit) {
+          s.markLine = {
+            silent: true,
+            symbol: "none",
+            lineStyle: { color: c.inkSoft, type: "dashed", opacity: 0.5 },
+            label: { show: false },
+            data: [{ yAxis: nReg - 0.5 }],
+          };
+        }
+        return s;
+      }
+
+      return {
+        backgroundColor: "transparent",
+        textStyle: { color: c.ink },
+        title: [
+          {
+            text: "Two evaluation datasets: dense co-measurement vs. a molecule-disjoint benchmark",
+            left: "center",
+            top: 2,
+            textStyle: { color: c.ink, fontSize: 15, fontWeight: 600 },
+          },
+          {
+            text: "OpenADMET · 9 co-measured assays",
+            left: "22%",
+            top: 30,
+            textAlign: "center",
+            textStyle: { color: c.ink, fontSize: 13, fontWeight: 600 },
+          },
+          {
+            text: "every molecule measured on all 9 → correlation picks sources",
+            left: "22%",
+            top: 49,
+            textAlign: "center",
+            textStyle: { color: c.inkSoft, fontSize: 10.5, fontWeight: 400 },
+          },
+          {
+            text: "TDC · 22 molecule-disjoint assays",
+            left: "76%",
+            top: 30,
+            textAlign: "center",
+            textStyle: { color: c.ink, fontSize: 13, fontWeight: 600 },
+          },
+          {
+            text: "separate studies, few shared molecules → metadata instead",
+            left: "76%",
+            top: 49,
+            textAlign: "center",
+            textStyle: { color: c.inkSoft, fontSize: 10.5, fontWeight: 400 },
+          },
+        ],
+        tooltip: {
+          trigger: "item",
+          backgroundColor: c.surface,
+          borderColor: c.grid,
+          textStyle: { color: c.ink },
+          formatter: function (p) {
+            var head = "<b>" + p.name + "</b><br/>" + p.value.toLocaleString() + " molecules";
+            if (p.data && p.data.cov != null) head += " (" + p.data.cov + "% of set)";
+            return head + '<br/><span style="opacity:.7">' + p.seriesName + "</span>";
+          },
+        },
+        legend: [
+          {
+            data: ["data-rich source", "few-shot target"],
+            left: "5%",
+            bottom: 6,
+            textStyle: { color: c.ink },
+            itemWidth: 14,
+            itemHeight: 10,
+          },
+          {
+            data: ["regression (9)", "classification (13)"],
+            right: "5%",
+            bottom: 6,
+            textStyle: { color: c.ink },
+            itemWidth: 14,
+            itemHeight: 10,
+          },
+        ],
+        grid: [
+          { left: 116, width: "24%", top: 78, bottom: 66 },
+          { left: "58%", right: 62, top: 78, bottom: 66 },
+        ],
+        xAxis: [
+          {
+            type: "log",
+            gridIndex: 0,
+            min: 100,
+            max: 20000,
+            name: "labelled molecules (log)",
+            nameLocation: "middle",
+            nameGap: 30,
+            nameTextStyle: { color: c.ink },
+            axisLine: { show: false },
+            splitLine: { lineStyle: { color: c.grid } },
+            axisLabel: { color: c.inkSoft },
+          },
+          {
+            type: "log",
+            gridIndex: 1,
+            min: 300,
+            max: 60000,
+            name: "labelled molecules (log)",
+            nameLocation: "middle",
+            nameGap: 30,
+            nameTextStyle: { color: c.ink },
+            axisLine: { show: false },
+            splitLine: { lineStyle: { color: c.grid } },
+            axisLabel: { color: c.inkSoft },
+          },
+        ],
+        yAxis: [
+          {
+            type: "category",
+            gridIndex: 0,
+            data: OA.map(function (r) {
+              return r[0];
+            }),
+            axisLine: { lineStyle: { color: c.grid } },
+            axisTick: { show: false },
+            axisLabel: { color: c.ink, fontSize: 10 },
+          },
+          {
+            type: "category",
+            gridIndex: 1,
+            data: TDC.map(function (r) {
+              return r[0];
+            }),
+            axisLine: { lineStyle: { color: c.grid } },
+            axisTick: { show: false },
+            axisLabel: { color: c.ink, fontSize: 9 },
+          },
+        ],
+        series: [
+          oaBar("source", oaSrc, "data-rich source"),
+          oaBar("target", oaTgt, "few-shot target"),
+          tBar("regression", tReg, "regression (9)", false),
+          tBar("classification", tCls, "classification (13)", true),
+        ],
+      };
     };
   };
+
+  // full-label ceiling: supervised MLP on all target labels, mean test ρ over the 9 TDC
+  // regression tasks (results/coldstart_acq_tdc) — matches the OpenADMET "ceiling (full labels)"
+  var TDC_CEILING = { supervised: 0.505 };
 
   // ---- TDC baselines (regression): the plain agent vs every non-LLM baseline ----
   // Same ladder view as OpenADMET, but molecule-disjoint tasks — no oracle here.
@@ -644,9 +827,9 @@
         },
         yname: "rank correlation ρ (test)",
         ymin: 0.08,
-        ymax: 0.35,
+        ymax: 0.56,
         legendRight: 24,
-        series: lines.concat(bars),
+        series: [refLine(c, D.ns.length, TDC_CEILING.supervised, "ceiling (full labels)", "dotted")].concat(lines).concat(bars),
       });
     };
   };
@@ -663,9 +846,9 @@
     };
     return function (c) {
       var rows = [
-        ["heuristic", "correlation heuristic (no LLM)", D.heuristic, c.inkSoft, { dash: "dashed", width: 1.6 }],
-        ["agent_corr", "agent — corr only (no metadata)", D.agent_corr, c.cat[7], { dash: "dashed" }],
-        ["agent_meta", "agent — metadata only (no corr)", D.agent_meta, c.cat[1], { dash: "dashed" }],
+        ["heuristic", "correlation heuristic (no LLM)", D.heuristic, c.inkSoft, { width: 1.6 }],
+        ["agent_corr", "agent — corr only (no metadata)", D.agent_corr, c.cat[7], {}],
+        ["agent_meta", "agent — metadata only (no corr)", D.agent_meta, c.cat[1], {}],
         ["agent_full", "agent — full (ours)", D.agent_full, c.cat[4], { width: 3.4, symbol: 9, z: 5 }],
       ];
       var lines = rows.map(function (r) {
@@ -685,42 +868,57 @@
         },
         yname: "rank correlation ρ (test)",
         ymin: 0.1,
-        ymax: 0.35,
+        ymax: 0.56,
         legendRight: 24,
-        series: lines.concat(bars),
+        series: [refLine(c, D.ns.length, TDC_CEILING.supervised, "ceiling (full labels)", "dotted")].concat(lines).concat(bars),
       });
     };
   };
 
   // ---- autoresearch: autonomous agent vs floor/greedy/oracle on sparse endpoints ----
   FIG["expdisc-fig-autoresearch"] = function () {
+    // equal-budget (n=25) comparison. agent/greedy = CPU re-score over 5 support seeds
+    // (mean; sd = error bars); floor/oracle = oracle_pf reference at n=25.
     var D = {
       targets: [
         ["MGMB", 222],
         ["MBPB", 975],
         ["MPPB", 1302],
       ],
-      floor: [0.518, 0.493, 0.321],
-      greedy: [0.722, 0.719, 0.657],
-      agent: [0.714, 0.686, 0.675],
-      oracle: [0.747, 0.72, 0.706],
+      floor: [0.497, 0.493, 0.323],
+      greedy: [0.73, 0.731, 0.698],
+      greedy_sd: [0.015, 0.029, 0.013],
+      agent: [0.714, 0.608, 0.652],
+      agent_sd: [0.022, 0.122, 0.044],
+      oracle: [0.752, 0.72, 0.697],
     };
+    var SD = { "greedy (manual)": D.greedy_sd, "autoresearch agent (ours)": D.agent_sd };
     return function (c) {
       var o = base(
         c,
-        "One autonomous agent reaches 96% of the brute-force oracle",
-        "sparsest OpenADMET endpoints, mean test ρ (+56% over no transfer)"
+        "At equal budget (25 shots), correlation-greedy matches or beats the agent",
+        "sparsest OpenADMET endpoints, mean test ρ over 5 support seeds (bars = ±1 s.d.)"
       );
       o.grid = { left: 62, right: 24, top: 104, bottom: 70 };
-      o.legend = { top: 44, textStyle: { color: c.ink, fontSize: 11 }, itemGap: 12 };
+      o.legend = {
+        top: 44,
+        textStyle: { color: c.ink, fontSize: 11 },
+        itemGap: 12,
+        data: ["no transfer", "greedy (manual)", "autoresearch agent (ours)", "oracle (brute force)"],
+      };
       o.tooltip.formatter = function (ps) {
         return (
           "<b>" +
           ps[0].axisValue.replace("\n", " ") +
           "</b><br/>" +
           ps
+            .filter(function (p) {
+              return p.seriesName.indexOf("±") === -1;
+            })
             .map(function (p) {
-              return p.marker + p.seriesName + ": <b>" + (+p.value).toFixed(3) + "</b>";
+              var sd = SD[p.seriesName];
+              var tail = sd ? " ± " + sd[p.dataIndex].toFixed(3) : "";
+              return p.marker + p.seriesName + ": <b>" + (+p.value).toFixed(3) + "</b>" + tail;
             })
             .join("<br/>")
         );
@@ -756,11 +954,43 @@
           z: (opts && opts.z) || 2,
         };
       }
+      // error bars: custom series, x-shifted to sit on the greedy/agent sub-bars
+      // (4 bars per category, default gaps -> sub-bar centers at ~±0.106 of the band).
+      function ebars(name, means, sds, offset) {
+        return {
+          name: name + " ±sd",
+          type: "custom",
+          silent: true,
+          z: 10,
+          data: means.map(function (m, i) {
+            return [i, m + sds[i], m - sds[i]];
+          }),
+          renderItem: function (params, api) {
+            var ci = api.value(0);
+            var hi = api.coord([ci, api.value(1)]);
+            var lo = api.coord([ci, api.value(2)]);
+            var band = api.size([1, 0])[0];
+            var x = hi[0] + offset * band;
+            var cap = band * 0.035;
+            var st = { stroke: c.ink, lineWidth: 1.1, opacity: 0.6 };
+            return {
+              type: "group",
+              children: [
+                { type: "line", shape: { x1: x, y1: hi[1], x2: x, y2: lo[1] }, style: st },
+                { type: "line", shape: { x1: x - cap, y1: hi[1], x2: x + cap, y2: hi[1] }, style: st },
+                { type: "line", shape: { x1: x - cap, y1: lo[1], x2: x + cap, y2: lo[1] }, style: st },
+              ],
+            };
+          },
+        };
+      }
       o.series = [
         bar("no transfer", D.floor, c.inkSoft),
         bar("greedy (manual)", D.greedy, c.cat[7]),
         bar("autoresearch agent (ours)", D.agent, c.cat[4], { z: 5 }),
         bar("oracle (brute force)", D.oracle, c.cat[0]),
+        ebars("greedy (manual)", D.greedy, D.greedy_sd, -0.106),
+        ebars("autoresearch agent (ours)", D.agent, D.agent_sd, 0.106),
       ];
       return o;
     };
@@ -786,10 +1016,10 @@
     return function (c) {
       var rows = [
         ["random", "random", D.random, c.inkSoft, { width: 1.8 }],
-        ["agent_cluster", "agent — cluster budget", D.agent_cluster, c.cat[0], {}],
-        ["agent_permol", "agent — named molecules", D.agent_permol, c.cat[1], {}],
-        ["agent_sandbox", "agent — embedding + k-medoids tool", D.agent_sandbox, c.cat[4], { width: 2.6, symbol: 8 }],
-        ["kmedoids", "k-medoids (label-free)", D.kmedoids, c.cat[2], { width: 3, symbol: 9, z: 5 }],
+        ["agent_cluster", "cluster agent", D.agent_cluster, c.cat[0], {}],
+        ["agent_permol", "named-mol agent", D.agent_permol, c.cat[1], {}],
+        ["agent_sandbox", "sandbox agent", D.agent_sandbox, c.cat[4], { width: 2.6, symbol: 8 }],
+        ["kmedoids", "k-medoids", D.kmedoids, c.cat[2], { width: 3, symbol: 9, z: 5 }],
       ];
       var lines = rows.map(function (r) {
         return ladderLine(r[1], r[2], r[3], r[4]);
@@ -798,8 +1028,8 @@
         return errorBars(r[1], r[2], D.sem[r[0]], r[3], (i - (rows.length - 1) / 2) * 5);
       });
       return linesOption(c, {
-        title: "Cold start: k-medoids leads at n=5, then everything converges",
-        subtext: "which molecules to measure first (zero target labels), mean test ρ over 9 targets; ±1 SEM whiskers overlap",
+        title: "OpenADMET · which molecules to measure first",
+        subtext: "cold start (zero target labels), mean test ρ over 9 targets",
         xlabels: D.ns,
         xname: "molecules measured",
         xaxisName: "molecules measured first (cold start)",
@@ -812,6 +1042,215 @@
         legendRight: 24,
         series: lines.concat(bars),
       });
+    };
+  };
+
+  // ---- cold-start acquisition, both datasets side by side (two grids) ----
+  // OpenADMET (left, 9 regression targets) + TDC regression (right, 9 targets).
+  // Same two-grid render as the coverage figure so both panels sit side by side at
+  // any column width; violet = LLM agent, gold = winning label-free heuristic.
+  FIG["expdisc-fig-coldstart-combined"] = function () {
+    var NS = [5, 10, 25, 50];
+    // All four label-free methods from one consistent run (results/coldstart_acq_baselines_pf,
+    // 3 seeds) so ff/D-optimal sit on the same footing as k-medoids. The even-handed agent
+    // (results/coldstart_sandbox_even, LUMI 19911669) ran on the same openadmet_pf trunks and so
+    // shares that footing; the older agent draws were nondeterministic reruns and stay out.
+    var OA = {
+      random: [0.331, 0.422, 0.492, 0.458],
+      farthest: [0.377, 0.458, 0.463, 0.461],
+      voptimal: [0.366, 0.391, 0.493, 0.437],
+      kmedoids: [0.411, 0.464, 0.496, 0.424],
+      even: [0.385, 0.405, 0.492, 0.436],
+      sem: {
+        random: [0.052, 0.041, 0.029, 0.029],
+        farthest: [0.058, 0.043, 0.036, 0.034],
+        voptimal: [0.065, 0.056, 0.032, 0.033],
+        kmedoids: [0.029, 0.042, 0.032, 0.033],
+        even: [0.064, 0.053, 0.032, 0.032],
+      },
+    };
+    var TDC = {
+      random: [0.137, 0.229, 0.197, 0.167],
+      farthest: [0.103, 0.183, 0.211, 0.229],
+      kmedoids: [0.136, 0.127, 0.191, 0.202],
+      sandbox: [0.131, 0.123, 0.193, 0.21],
+      voptimal: [0.172, 0.206, 0.218, 0.275],
+      sem: {
+        random: [0.042, 0.027, 0.029, 0.029],
+        farthest: [0.04, 0.025, 0.031, 0.035],
+        kmedoids: [0.05, 0.04, 0.023, 0.025],
+        sandbox: [0.049, 0.04, 0.024, 0.027],
+        voptimal: [0.034, 0.03, 0.023, 0.028],
+      },
+    };
+    return function (c) {
+      // gi = grid index (0 = OpenADMET, 1 = TDC). tag keeps series names unique across
+      // both panels; the legend formatter strips it back to a clean label.
+      function ln(label, data, color, gi, opts) {
+        opts = opts || {};
+        return {
+          name: label,
+          type: "line",
+          xAxisIndex: gi,
+          yAxisIndex: gi,
+          data: data,
+          smooth: true,
+          symbolSize: opts.symbol || 7,
+          lineStyle: { width: opts.width || 2.4, color: color, type: opts.dash || "solid" },
+          itemStyle: { color: color },
+          z: opts.z || 2,
+          emphasis: { focus: "series" },
+        };
+      }
+      function eb(name, means, sems, color, gi, xoff) {
+        return {
+          name: name,
+          type: "custom",
+          silent: true,
+          z: 6,
+          xAxisIndex: gi,
+          yAxisIndex: gi,
+          tooltip: { show: false },
+          data: means.map(function (m, i) {
+            return [i, m - sems[i], m + sems[i]];
+          }),
+          renderItem: function (params, api) {
+            var lo = api.coord([api.value(0), api.value(1)]);
+            var hi = api.coord([api.value(0), api.value(2)]);
+            var x = lo[0] + (xoff || 0),
+              cap = 4;
+            var st = { stroke: color, lineWidth: 1.3, opacity: 0.8 };
+            return {
+              type: "group",
+              children: [
+                { type: "line", shape: { x1: x, y1: lo[1], x2: x, y2: hi[1] }, style: st },
+                { type: "line", shape: { x1: x - cap, y1: lo[1], x2: x + cap, y2: lo[1] }, style: st },
+                { type: "line", shape: { x1: x - cap, y1: hi[1], x2: x + cap, y2: hi[1] }, style: st },
+              ],
+            };
+          },
+        };
+      }
+      // one style per method, shared by both panels, so a single legend reads across the figure.
+      // k-medoids and D-optimal carry the story (representative sampling) and stay emphasised in
+      // both. The agent is one series name across both panels so the legend reads as one method;
+      // the two panels ran different prompts (OpenADMET even-handed, TDC k-medoids-anchored),
+      // which the post covers in a footnote rather than the legend.
+      var STYLE = {
+        random: [c.inkSoft, { width: 1.8 }],
+        "farthest-first": [c.cat[7], {}],
+        "k-medoids": [c.cat[2], { width: 3, symbol: 9, z: 5 }],
+        "D-optimal design": [c.cat[3], { width: 3, symbol: 9, z: 5 }],
+        "sandbox agent": [c.cat[4], { width: 2.6, symbol: 8, z: 6 }],
+      };
+      var LEGEND = ["random", "farthest-first", "k-medoids", "D-optimal design", "sandbox agent"];
+      var oaRows = [
+        ["random", OA.random, OA.sem.random],
+        ["farthest-first", OA.farthest, OA.sem.farthest],
+        ["D-optimal design", OA.voptimal, OA.sem.voptimal],
+        ["k-medoids", OA.kmedoids, OA.sem.kmedoids],
+        ["sandbox agent", OA.even, OA.sem.even],
+      ];
+      var tdcRows = [
+        ["random", TDC.random, TDC.sem.random],
+        ["farthest-first", TDC.farthest, TDC.sem.farthest],
+        ["k-medoids", TDC.kmedoids, TDC.sem.kmedoids],
+        ["sandbox agent", TDC.sandbox, TDC.sem.sandbox],
+        ["D-optimal design", TDC.voptimal, TDC.sem.voptimal],
+      ];
+      var series = [];
+      oaRows.forEach(function (r, i) {
+        series.push(ln(r[0], r[1], STYLE[r[0]][0], 0, STYLE[r[0]][1]));
+        series.push(eb(r[0], r[1], r[2], STYLE[r[0]][0], 0, (i - 2) * 5));
+      });
+      tdcRows.forEach(function (r, i) {
+        series.push(ln(r[0], r[1], STYLE[r[0]][0], 1, STYLE[r[0]][1]));
+        series.push(eb(r[0], r[1], r[2], STYLE[r[0]][0], 1, (i - 2) * 5));
+      });
+      function axisX(gi) {
+        return {
+          type: "category",
+          gridIndex: gi,
+          data: NS,
+          boundaryGap: false,
+          axisLine: { lineStyle: { color: c.grid } },
+          axisTick: { show: false },
+          axisLabel: {
+            color: c.ink,
+            formatter: function (v) {
+              return "n=" + v;
+            },
+          },
+        };
+      }
+      function axisY(gi, min, max) {
+        return {
+          type: "value",
+          gridIndex: gi,
+          name: "rank correlation ρ (test)",
+          min: min,
+          max: max,
+          nameLocation: "middle",
+          nameRotate: 90,
+          nameGap: 40,
+          axisLine: { show: false },
+          splitLine: { lineStyle: { color: c.grid } },
+          axisLabel: { color: c.ink },
+          nameTextStyle: { color: c.ink },
+        };
+      }
+      return {
+        backgroundColor: "transparent",
+        textStyle: { color: c.ink },
+        title: [
+          {
+            text: "Cold start: which molecules to measure first (zero target labels)",
+            left: "center",
+            top: 2,
+            textStyle: { color: c.ink, fontSize: 15, fontWeight: 600 },
+          },
+          {
+            text: "OpenADMET · 9 regression targets",
+            left: "27%",
+            top: 28,
+            textAlign: "center",
+            textStyle: { color: c.ink, fontSize: 12.5, fontWeight: 600 },
+          },
+          {
+            text: "TDC · 9 regression targets",
+            left: "78%",
+            top: 28,
+            textAlign: "center",
+            textStyle: { color: c.ink, fontSize: 12.5, fontWeight: 600 },
+          },
+        ],
+        tooltip: {
+          trigger: "item",
+          backgroundColor: c.surface,
+          borderColor: c.grid,
+          textStyle: { color: c.ink },
+          formatter: function (p) {
+            if (p.value == null || p.seriesType === "custom") return "";
+            return "<b>n=" + NS[p.dataIndex] + "</b><br/>" + p.marker + p.seriesName + ": <b>" + (+p.value).toFixed(3) + "</b>";
+          },
+        },
+        legend: {
+          data: LEGEND,
+          left: "center",
+          bottom: 6,
+          itemGap: 14,
+          textStyle: { color: c.ink, fontSize: 10.5 },
+          itemWidth: 16,
+          itemHeight: 8,
+        },
+        grid: [
+          { left: 56, width: "36%", top: 56, bottom: 108 },
+          { left: "56%", right: 28, top: 56, bottom: 108 },
+        ],
+        xAxis: [axisX(0), axisX(1)],
+        yAxis: [axisY(0, 0.24, 0.58), axisY(1, 0.05, 0.34)],
+        series: series,
+      };
     };
   };
 
